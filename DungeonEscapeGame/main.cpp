@@ -2,6 +2,10 @@
 #include <fstream>
 
 const int MAX_SIZE = 100;
+const int LEVEL1_SIZE = 15;
+const int LEVEL2_SIZE = 20;
+const int LEVEL3_SIZE = 25;
+
 
 void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int rows, int cols)
 {
