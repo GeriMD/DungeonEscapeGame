@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 
-const int MAX_SIZE = 100;
+const int MAX_SIZE = 50;
 const int LEVEL1_SIZE = 15;
 const int LEVEL2_SIZE = 20;
 const int LEVEL3_SIZE = 25;
@@ -53,14 +53,87 @@ void printMatrix(char matrix[][MAX_SIZE], int rows, int cols)
 	}
 }
 
+unsigned myStrlen(char* str)
+{
+	if (!str)
+	{
+		return 0;
+	}
+
+	unsigned counter = 0;
+
+	while (*str)
+	{
+		counter++;
+		str++;
+	}
+
+	return counter;
+}
+
+void myStrcpy(const char* source, char* dest)
+{
+	if (!source || !dest)
+		return;
+
+	while (*source)
+	{
+		*dest = *source;
+		dest++;
+		source++;
+	}
+
+	*dest = '\0';
+}
+
+void myStrcat(char* first, const char* second)
+{
+	if (!first || !second)
+		return;
+
+	size_t firstLen = myStrlen(first);
+	first += firstLen;
+	myStrcpy(second, first);
+}
+
+void addNewPlayer(char* playersName)
+{
+	unsigned lenght = myStrlen(playersName);
+
+	if (lenght > 50)
+	{
+		std::cout << "Please enter valid name.";
+			return;
+	}
+
+	std::ofstream outFile;
+
+	outFile.open("Names.txt", std::ios_base::app);
+
+	outFile << playersName << "1\n";
+
+	std::cout << "Player " << playersName << " was added.\n";
+	outFile.close();
+}
 
 int main()
 {
+
+	char playersName[MAX_SIZE] = "";
+
+	std::cout << "Welcome to Dungeon Escape! Enter players name: ";
+
+	std::cin >> playersName;
+
+	int level = 1;
+	
+	/*
 	char matrix[MAX_SIZE][MAX_SIZE]{};
 
 	readPlayerBoard("Level1.1.txt", matrix, 15, 15);
 
 	printMatrix(matrix, 15, 15);
+	*/
 
 	return 0;
 }
