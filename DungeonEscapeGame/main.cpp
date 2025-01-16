@@ -34,7 +34,7 @@ void printMatrix(char matrix[][MAX_SIZE], int rows, int cols)
 	{
 		for (size_t j = 0; j < cols; j++)
 		{
-			if (matrix[i][j] == ' ')
+			if (matrix[i][j] == '0')
 			{
 				std::cout << " ";
 			}
