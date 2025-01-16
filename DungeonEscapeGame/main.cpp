@@ -1,5 +1,6 @@
 #include <iostream>
 #include <fstream>
+#include <random>
 
 const int MAX_SIZE = 50;
 const int LEVEL1_SIZE = 15;
@@ -114,6 +115,61 @@ void addNewPlayer(char* playersName)
 
 	std::cout << "Player " << playersName << " was added.\n";
 	outFile.close();
+
+	char fileName[MAX_SIZE]{};
+
+	char txt[] = ".txt\0";
+
+	myStrcat(fileName, playersName);
+	myStrcat(fileName, txt);
+
+	std::ofstream player(fileName);
+	player.close();
+}
+
+bool playerFound(const char* playersName, const char* name)
+{
+	while (!name && !playersName)
+	{
+		if (*name != *playersName)
+		{
+			return false;
+		}
+
+		name++;
+		playersName++;
+	}
+
+	return (*playersName == '\0' && *name == '\0');
+}
+
+int returnPlayerLevel(char* playersName)
+{
+	char name[MAX_SIZE];
+
+	int level = 0;
+	 
+	std::ifstream inputFile;
+	inputFile.open("Names.txt");
+
+	if (inputFile.is_open())
+	{
+		while (inputFile >> name)
+		{
+			if (playerFound(playersName, name))
+			{
+				inputFile >> level;
+				inputFile.close();
+				return level;
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Coudn't open the file.\n";
+	}
+	inputFile.close();
+	return 0;
 }
 
 int main()
