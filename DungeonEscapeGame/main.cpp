@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <random>
+#include <string>
 
 const int MAX_SIZE = 50;
 const int LEVEL1_SIZE = 15;
@@ -97,49 +98,17 @@ void myStrcat(char* first, const char* second)
 	myStrcpy(second, first);
 }
 
-void addNewPlayer(char* playersName)
+bool playerFound( char* playersName, char* name)
 {
-	unsigned lenght = myStrlen(playersName);
-
-	if (lenght > 50)
-	{
-		std::cout << "Please enter valid name.";
-			return;
-	}
-
-	std::ofstream outFile;
-
-	outFile.open("Names.txt", std::ios_base::app);
-
-	outFile << playersName << "1\n";
-
-	std::cout << "Player " << playersName << " was added.\n";
-	outFile.close();
-
-	char fileName[MAX_SIZE]{};
-
-	char txt[] = ".txt\0";
-
-	myStrcat(fileName, playersName);
-	myStrcat(fileName, txt);
-
-	std::ofstream player(fileName);
-	player.close();
-}
-
-bool playerFound(const char* playersName, const char* name)
-{
-	while (!name && !playersName)
+	while (*name != '\0' && *playersName != '\0')
 	{
 		if (*name != *playersName)
 		{
 			return false;
 		}
-
 		name++;
 		playersName++;
 	}
-
 	return (*playersName == '\0' && *name == '\0');
 }
 
@@ -148,7 +117,7 @@ int returnPlayerLevel(char* playersName)
 	char name[MAX_SIZE];
 
 	int level = 0;
-	 
+
 	std::ifstream inputFile;
 	inputFile.open("Names.txt");
 
@@ -172,17 +141,73 @@ int returnPlayerLevel(char* playersName)
 	return 0;
 }
 
-int main()
+
+
+void addNewPlayer()
 {
+	char playersName[MAX_SIZE];
 
-	char playersName[MAX_SIZE] = "";
-
-	std::cout << "Welcome to Dungeon Escape! Enter players name: ";
-
+	std::cout << "Please enter your name: " << std::endl;
 	std::cin >> playersName;
 
-	int level = 1;
+	unsigned lenght = myStrlen(playersName);
+
+	if (lenght > 50)
+	{
+		std::cout << "Name too long. Please enter valid name.";
+		addNewPlayer();
+	}
+	int level = 0;
+
+	if (level = returnPlayerLevel(playersName))
+	{
+
+		std::cout << "Player " << playersName << " was found! Current level: " << level << std::endl;
+	}
+	else {
+
+		std::ofstream outFile;
+
+		outFile.open("Names.txt", std::ios_base::app);
+
+		outFile << playersName << " 1\n";
+
+		std::cout << "Player " << playersName << " was added.\n";
+		outFile.close();
+
+		char fileName[MAX_SIZE]{};
+
+		char txt[] = ".txt\0";
+
+		myStrcat(fileName, playersName);
+		myStrcat(fileName, txt);
+
+		std::ofstream player(fileName);
+		//int startingLevel = 1;
+		//int startingLives = 3;
+		//bool keyFound = false;
+		//player << "level: " << startingLevel << std::endl;
+		//player << "lives: " << startingLives << std::endl;
+		//player << "Key: " << keyFound << std::endl;
+		player.close();
+	}
+}
+
+
+
+
+int main()
+{
 	
+
+	std::cout << "Welcome to Dungeon Escape!" << std::endl;
+	addNewPlayer();
+	
+
+	
+
+	int level = 1;
+
 	/*
 	char matrix[MAX_SIZE][MAX_SIZE]{};
 
