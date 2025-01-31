@@ -205,7 +205,115 @@ void createPlayerBoard(char matrix[][MAX_SIZE], int toOpen)
 	}
 
 }
+bool isInTheBoudaries(int size, int row, int col)
+{
+	return (row >= 0 && row < size) && (col >= 0 && col < size);
+}
 
+void movePlayer(char direction, int& startingRow, int& startingCol, int size)
+{
+	switch (direction)
+	{
+		//up
+	case 'w':
+	case 'W':
+		if (isInTheBoudaries(size, startingRow - 1, startingCol)) {
+			startingRow--;
+		}
+		else
+		{
+			std::cout << "You cannot make that move. You are trying to go out of the playing board.";
+		}
+		
+		break;
+		//down
+	case 's':
+	case 'S':
+		if (isInTheBoudaries(size, startingRow + 1, startingCol)) {
+			startingRow++;
+		}
+		else
+		{
+			std::cout << "You cannot make that move. You are trying to go out of the playing board.";
+		}
+		break;
+		//left
+	case 'a':
+	case 'A':
+		if (isInTheBoudaries(size, startingRow, startingCol - 1)) {
+			startingCol--;
+		}
+		else
+		{
+			std::cout << "You cannot make that move. You are trying to go out of the playing board.";
+		}
+		break;
+		//right
+	case 'd':
+	case 'D':
+		if (isInTheBoudaries(size, startingRow, startingCol + 1)) {
+			startingCol++;
+		}
+		else
+		{
+			std::cout << "You cannot make that move. You are trying to go out of the playing board.";
+		}
+		break;
+	}
+}
+
+bool hasSavedProgress(char* playersName)
+{
+	std::ifstream inFile;
+
+	inFile.open(playersName);
+
+	int num = 0;
+	if (inFile.is_open())
+	{
+		inFile >> num;
+	 }
+	return (num != 0); // true - има прогрес, false - няма прогрес
+}
+void savePlayersProgress(char* playersName, int lives, char matrix[][MAX_SIZE], int size, int levelVersion)
+{
+	std::ofstream outFile;
+
+	outFile.open(playersName);
+
+	if (outFile.is_open())
+	{
+		outFile << levelVersion << " " << lives << std::endl;
+		for (int i = 0; i < MAX_SIZE; i++)
+		{
+			for (int j = 0; j < MAX_SIZE; j++)
+			{
+				outFile << matrix[i][j];
+			}
+			outFile << std::endl;
+		}
+	}
+	else {
+		std::cout << "Cannot open this file!" << std::endl;
+	}
+
+	outFile.close();
+}
+void startGame(char* playersName, char matrix[][MAX_SIZE], int size)
+{
+	int level = 1;
+	int lives = 3;
+	int maxLevel = returnPlayerLevel(playersName);
+	char choice;
+
+	if (hasSavedProgress)
+	{
+		std::cout << "Do you want to continue your saved level or start a new one? Please answer yes[y/Y] or no[n/N]" << std::endl;
+		std::cin >> choice;
+	}
+
+
+}
 
 int main()
 {
