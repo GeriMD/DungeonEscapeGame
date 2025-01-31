@@ -9,7 +9,7 @@ const int LEVEL2_SIZE = 20;
 const int LEVEL3_SIZE = 25;
 
 
-void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int rows, int cols)
+void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int size)
 {
 	if (!filePath)
 	{
@@ -23,9 +23,9 @@ void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int rows, in
 		return;
 	}
 
-	for (size_t i = 0; i < rows; i++)
+	for (size_t i = 0; i < size; i++)
 	{
-		for (size_t j = 0; j < cols; j++)
+		for (size_t j = 0; j < size; j++)
 		{
 			ifs >> matrix[i][j];
 		}
@@ -34,11 +34,11 @@ void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int rows, in
 	ifs.close();
 }
 
-void printMatrix(char matrix[][MAX_SIZE], int rows, int cols)
+void printMatrix(char matrix[][MAX_SIZE], int size)
 {
-	for (size_t i = 0; i < rows; i++)
+	for (size_t i = 0; i < size; i++)
 	{
-		for (size_t j = 0; j < cols; j++)
+		for (size_t j = 0; j < size; j++)
 		{
 			if (matrix[i][j] == '0')
 			{
@@ -141,8 +141,6 @@ int returnPlayerLevel(char* playersName)
 	return 0;
 }
 
-
-
 void addNewPlayer()
 {
 	char playersName[MAX_SIZE];
@@ -193,7 +191,20 @@ void addNewPlayer()
 	}
 }
 
+void createPlayerBoard(char matrix[][MAX_SIZE], int toOpen)
+{
 
+	switch (toOpen)
+	{
+	case 10: readPlayerBoard("Level1.1.txt", matrix, LEVEL1_SIZE); break;
+	case 11: readPlayerBoard("Level1.2.txt", matrix, LEVEL1_SIZE); break;
+	case 20: readPlayerBoard("Level2.1.txt", matrix, LEVEL2_SIZE); break;
+	case 21: readPlayerBoard("Level2.2.txt", matrix, LEVEL2_SIZE); break;
+	case 30: readPlayerBoard("Level3.1.txt", matrix, LEVEL3_SIZE); break;
+	case 31: readPlayerBoard("Level3.2.txt", matrix, LEVEL3_SIZE); break;
+	}
+
+}
 
 
 int main()
@@ -202,19 +213,17 @@ int main()
 
 	std::cout << "Welcome to Dungeon Escape!" << std::endl;
 	addNewPlayer();
-	
-
-	
-
+	 
 	int level = 1;
+	
 
-	/*
-	char matrix[MAX_SIZE][MAX_SIZE]{};
+	
+	//char matrix[MAX_SIZE][MAX_SIZE]{};
 
-	readPlayerBoard("Level1.1.txt", matrix, 15, 15);
+	//createPlayerBoard( matrix, 31);
 
-	printMatrix(matrix, 15, 15);
-	*/
+	//printMatrix(matrix, LEVEL3_SIZE);
+	
 
 	return 0;
 }
