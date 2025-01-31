@@ -275,7 +275,7 @@ bool hasSavedProgress(char* playersName)
 	 }
 	return (num != 0); // true - има прогрес, false - няма прогрес
 }
-void savePlayersProgress(char* playersName, int lives, char matrix[][MAX_SIZE], int size, int levelVersion)
+void savePlayersProgress(char* playersName, int lives, char matrix[][MAX_SIZE], int size, int coins, bool keyFound)
 {
 	std::ofstream outFile;
 
@@ -283,10 +283,10 @@ void savePlayersProgress(char* playersName, int lives, char matrix[][MAX_SIZE], 
 
 	if (outFile.is_open())
 	{
-		outFile << levelVersion << " " << lives << std::endl;
-		for (int i = 0; i < MAX_SIZE; i++)
+		outFile << lives << " " << coins << " " << keyFound << std::endl;
+		for (int i = 0; i < size; i++)
 		{
-			for (int j = 0; j < MAX_SIZE; j++)
+			for (int j = 0; j < size; j++)
 			{
 				outFile << matrix[i][j];
 			}
@@ -298,6 +298,38 @@ void savePlayersProgress(char* playersName, int lives, char matrix[][MAX_SIZE], 
 	}
 
 	outFile.close();
+}
+
+int readPlayersProgress(char* playersName, char matrix[][MAX_SIZE], int size)
+{
+	int coins;
+	int lives;
+	bool keyFound;
+
+	std::ifstream inFile;
+	inFile.open(playersName);
+
+	if (inFile.is_open())
+	{
+		inFile >> lives;
+		inFile >> coins;
+		inFile >> keyFound;
+
+		for (int i = 0; i < size; i++)
+		{
+			for (int j = 0; j < size; j++)
+			{
+				inFile >> matrix[i][j];
+			}
+		}
+	}
+	else
+	{
+		std::cout << "Cannot open this file!" << std::endl;
+	}
+	inFile.close();
+
+	return lives;
 }
 void startGame(char* playersName, char matrix[][MAX_SIZE], int size)
 {
