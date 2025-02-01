@@ -351,8 +351,6 @@ move:
     goto move;
 
 }
-
-//void saveProgress(char* playersName, )
 bool hasProgress(char* playersName)
 {
     char name[MAX_SIZE];
@@ -366,7 +364,7 @@ bool hasProgress(char* playersName)
         {
             if (playerFound(playersName, name))
             {
-        
+
                 inputFile.close();
                 return true;
             }
@@ -379,6 +377,28 @@ bool hasProgress(char* playersName)
     inputFile.close();
     return false;
 }
+
+void saveProgress(char* playersName)
+{
+    if (hasProgress(playersName))
+    {
+
+    }
+    else
+    {
+        std::ofstream outFile("Progress.txt", std::ios::app);
+        if (!outFile.is_open())
+        {
+            std::cout << "Cannot open the file!";
+            return;
+        } 
+
+        outFile << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
+        outFile.close();
+
+    }
+}
+
 int main()
 {
 
@@ -391,8 +411,11 @@ int main()
    // system("cls");
     char name[MAX_SIZE]{};
     std::cin >> name;
-    bool progress = hasProgress(name);
-    std::cout << progress;
+    lives = 3;
+    coins = 77;
+    level = 5;
+    key = false;
+    saveProgress(name);
 
     return 0;
 }
