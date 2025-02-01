@@ -398,6 +398,40 @@ void saveProgress(char* playersName)
 
     }
 }
+void readProgress(char* playersName)
+{
+    std::ifstream inputFile("Progress.txt");
+
+    if (!inputFile.is_open())
+    {
+        std::cout << "Cannot open this file!" << std::endl;
+
+    }
+
+    bool found = false;
+    found = hasProgress(playersName);
+    char name[MAX_SIZE];
+    if (found)
+    {
+        while (inputFile >> name)
+        {
+            if (playerFound(playersName, name))
+            {
+                inputFile >> level >> lives >> coins >> key;
+                inputFile.close();
+               
+            }
+        }
+    }
+    else
+    {
+        lives = 3;
+        level = 1;
+        coins = 0;
+        key = false;
+    }
+    std::cout << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
+}
 
 int main()
 {
@@ -411,11 +445,8 @@ int main()
    // system("cls");
     char name[MAX_SIZE]{};
     std::cin >> name;
-    lives = 3;
-    coins = 77;
-    level = 5;
-    key = false;
-    saveProgress(name);
+   
+    readProgress(name);
 
     return 0;
 }
