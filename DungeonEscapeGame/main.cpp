@@ -16,7 +16,7 @@ const int LEVELS_COUNT = 3;
 
 int lives;
 int coins;
-int level;
+int level = 3;
 int levelVersion;
 bool key;
 
@@ -524,7 +524,6 @@ void readPlayersSavedMatrix(char* playersName, char matrix[][MAX_SIZE], int size
     char fileNameArr[MAX_SIZE]{};
     convertFromStringToCharArray(fileName, fileNameArr);
     readPlayerBoard(fileNameArr, matrix, size);
-    printMatrix(matrix, size);
 }
 void saveMap(char* playersName, int size, char matrix[50][50])
 {
@@ -549,6 +548,74 @@ void saveMap(char* playersName, int size, char matrix[50][50])
     }
     outFile.close();
 
+}
+
+void chooseStartingMap(char* playersName, char matrix[][MAX_SIZE], int& size)
+{
+    again:
+    std::cout << "Do you want to continue[c/C] your last saved level, or start a new one[n/N]? " << std::endl;
+
+    char answer;
+
+    std::cin >> answer;
+
+    switch (answer)
+    {
+    case 'c':
+    case 'C':
+    {
+        
+       level = returnPlayerLevel(playersName);
+       switch (level)
+       {
+       case 1:
+           size = LEVEL1_SIZE;
+           break;
+       case 2:
+           size = LEVEL2_SIZE;
+           break;
+       case 3:
+           size = LEVEL3_SIZE;
+           break;
+       }
+        readPlayersSavedMatrix(playersName, matrix, size);
+        lives = 3;
+        coins = 0;
+        key = false;
+        printMatrix(matrix, size);
+    }
+       
+        break;
+    case 'n':
+    case 'N':
+    {
+        go:
+        lives = 3;
+        coins = 0;
+        std::cout << "Please choose a level to play." << std::endl;
+
+        int startingLevel;
+        std::cin >> startingLevel;
+
+        if (startingLevel <= level)
+        {
+            levelVersion = startingLevel * 10 + std::rand() % 2;
+            key = false;
+            level = startingLevel;
+            createPlayerBoard(matrix, levelVersion);
+            printMatrix(matrix, LEVEL3_SIZE);
+        } 
+        else
+        {
+            std::cout << "You cannot play a level you have never played. Your current level is: " << level << " " << std::endl;
+            goto go;
+        }
+    }
+        break;
+    default:
+        goto again;
+        break;
+    }
 }
 void winGame()
 {
@@ -633,6 +700,9 @@ int main()
 
   //  for (int i = 0; i < 50; i++)
     //    std::cout << name[i] << " ";
-    readPlayersSavedMatrix(name, matrix, LEVEL2_SIZE);
+   // readPlayersSavedMatrix(name, matrix, LEVEL2_SIZE);
+    int size;
+    chooseStartingMap(name, matrix, size);
+   
     return 0;
 }
