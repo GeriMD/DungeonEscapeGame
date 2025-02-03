@@ -21,6 +21,23 @@ int levelVersion;
 bool key;
 
 
+void startingMessages()
+{
+    std::cout << "Welcome to Dungeon Escape!" << std::endl;
+    std::cout << "To win the game you will have to escape a maze." << std::endl;
+    std::cout << "There are 3 levels. Get through the leves succesfully and with maximum number of coins." << std::endl;
+    std::cout << std::endl;
+}
+void explanationsMessages()
+{
+    std::cout << "@ - user" << std::endl;
+    std::cout << "C - coin" << std::endl;
+    std::cout << "# - wall [If you hit it, you lose a life. Be carefull!]" << std::endl;
+    std::cout << "% - portal [Teleports you to the next portal.]" << std::endl;
+    std::cout << "& - key [You need it to finish the level!]" << std::endl;
+    std::cout << "X - chest [You open it with the key to win the level.]" << std::endl;
+}
+
 void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int size)
 {
     if (!filePath)
