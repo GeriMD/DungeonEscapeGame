@@ -5,6 +5,8 @@
 #include <windows.h>
 #include <sstream>
 #include <ctime>
+#include <vector>
+#include <string>
 
 const int MAX_SIZE = 50;
 const int LEVEL1_SIZE = 15;
@@ -145,7 +147,7 @@ int returnPlayerLevel(char* playersName)
     int level = 0;
 
     std::ifstream inputFile;
-    inputFile.open("Names.txt");
+    inputFile.open("Progress.txt");
 
     if (inputFile.is_open())
     {
@@ -190,14 +192,19 @@ void addNewPlayer()
     }
     else {
 
-        std::ofstream outFile;
+        std::ofstream outFileNames;
+        std::ofstream outFileProgress;
 
-        outFile.open("Names.txt", std::ios_base::app);
+        outFileNames.open("Names.txt", std::ios_base::app);
+        outFileProgress.open("Progress.txt", std::ios_base::app);
 
-        outFile << playersName << " 1\n";
+        outFileNames << playersName << "\n";
+        outFileProgress << playersName << " " << 1 << " " << 3 << " " << 74 << " " << false << "\n";
+        
 
         std::cout << "Player " << playersName << " was added.\n";
-        outFile.close();
+        outFileNames.close();
+        outFileProgress.close();
 
         char fileName[MAX_SIZE]{};
 
@@ -377,11 +384,63 @@ bool hasProgress(char* playersName)
     inputFile.close();
     return false;
 }
-
+//TODO MAY CAUSE A PROBLEM!!!
 void saveProgress(char* playersName)
 {
+    std::string strLives, strCoins, strLevel, strKey, strName;
+    strLives = std::to_string(lives);
+    strCoins = std::to_string(coins);
+    strLevel = std::to_string(level);
+    if (key)
+    {
+        strKey = "true";
+    }
+    else 
+    {
+        strKey = "false";
+    }
     if (hasProgress(playersName))
     {
+        std::ifstream file("Progress.txt");
+
+        if (!file.is_open())
+        {
+            std::cout << "Cannot open this file!" << std::endl;
+        }
+        else
+        {
+            std::vector<std::string> lines;
+            std::string line;
+
+            while (std::getline(file, line))
+            {
+                std::stringstream StringStream(line);
+                std::string name;
+
+                StringStream >> name;
+                if (name == playersName)
+                {
+                    line = name + " " + strLevel + " " + strLives + " " + strCoins + " " + strKey;
+                }
+                lines.push_back(line);
+            }
+            file.close();
+
+            std::ofstream outFile("Progress.txt", std::ofstream::trunc);
+            if (!outFile)
+            {
+                std::cerr << "Cannot open this file!" << std::endl;
+            }
+            else
+            {
+
+                for (const auto& updatedLine : lines)
+                {
+                    outFile << updatedLine << std::endl;
+                }
+            }
+            outFile.close();
+        }
 
     }
     else
@@ -397,6 +456,10 @@ void saveProgress(char* playersName)
         outFile.close();
 
     }
+}
+void replaceProgress(char* playersName)
+{
+
 }
 void readProgress(char* playersName)
 {
@@ -430,23 +493,30 @@ void readProgress(char* playersName)
         coins = 0;
         key = false;
     }
-    std::cout << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
+   std::cout << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
+}
+void begining(char* playersName)
+{
+    readProgress(playersName);
+
+
 }
 
 int main()
 {
 
 
-    std::cout << "Welcome to Dungeon Escape!" << std::endl;
-    std::cout << "Your task in this game is to escape from a maze with maximum coins." << std::endl;
-    std::cout << "The game has 3 levels with different difficulty. Good luck!" << std::endl;
-   // addNewPlayer();
+  //  std::cout << "Welcome to Dungeon Escape!" << std::endl;
+  //  std::cout << "Your task in this game is to escape from a maze with maximum coins." << std::endl;
+  //  std::cout << "The game has 3 levels with different difficulty. Good luck!" << std::endl;
+  //  addNewPlayer();
 
    // system("cls");
     char name[MAX_SIZE]{};
     std::cin >> name;
-   
-    readProgress(name);
 
+   saveProgress(name);
+   readProgress(name);
+    
     return 0;
 }
