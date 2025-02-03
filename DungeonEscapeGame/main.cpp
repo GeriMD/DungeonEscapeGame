@@ -82,8 +82,8 @@ void printMatrix(char matrix[][MAX_SIZE], int size)
         std::cout << std::endl;
     }
 }
-
-unsigned myStrlen(char* str)
+//made it const may cause a problem!!!
+unsigned myStrlen(const char* str)
 {
     if (!str)
     {
@@ -99,6 +99,16 @@ unsigned myStrlen(char* str)
     }
 
     return counter;
+}
+std::string convertToString(const char* str)
+{
+    std::string s = "";
+    unsigned len = myStrlen(str);
+    for (int i = 0; i < len; i++)
+    {
+        s += str[i];
+    }
+    return s;
 }
 
 void myStrcpy(const char* source, char* dest)
@@ -384,7 +394,7 @@ bool hasProgress(char* playersName)
     inputFile.close();
     return false;
 }
-//TODO MAY CAUSE A PROBLEM!!!
+//TODO: MAY CAUSE A PROBLEM!!!
 void saveProgress(char* playersName)
 {
     std::string strLives, strCoins, strLevel, strKey, strName;
@@ -493,13 +503,92 @@ void readProgress(char* playersName)
         coins = 0;
         key = false;
     }
-   std::cout << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
+  // std::cout << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
 }
 void begining(char* playersName)
 {
     readProgress(playersName);
 
 
+}
+
+void saveMap(char* playersName, int size, char matrix[50][50])
+{
+    std::string fileName = convertToString(playersName) + ".txt";
+
+    std::ofstream outFile(fileName);
+
+    if (!outFile.is_open())
+    {
+        std::cout << "Cannot open this file!" << std::endl;
+    }
+    else
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                outFile << matrix[i][j];
+            }
+            outFile << std::endl;
+        }
+    }
+    outFile.close();
+
+}
+void winGame()
+{
+    std::srand(std::time(nullptr));
+
+    if (level == LEVELS_COUNT)
+    {
+        system("cls");
+
+        std::cout << "You won the game! You passed all the levels." << std::endl;
+
+        Sleep(2000);
+        exit(0);
+    }
+}
+
+void gameOver()
+{
+    system("cls");
+
+    std::cout << "You don't have any lives left!" << std::endl;
+    std::cout << "Do you want to try again? Please answer yes[y/Y] or no[n/N]." << std::endl;
+
+    char answer;
+    wrong:
+    std::cin >> answer;
+
+    switch (answer)
+    {
+    case 'y':
+    case 'Y':
+        lives = 3;
+        coins = 0;
+        key = false;
+
+        //insertMatrix();
+        //start();
+        break;
+    case 'n':
+    case 'N':
+        system("cls");
+        std::cout << "Game over! Thank you for playing!" << std::endl;
+
+        Sleep(1000);
+
+        exit(0);
+        break;
+    default:
+        std::cout << "Wrong input! Please try again." << std::endl;
+        goto wrong;
+    }
+    
+
+    
 }
 
 int main()
@@ -515,8 +604,15 @@ int main()
     char name[MAX_SIZE]{};
     std::cin >> name;
 
-   saveProgress(name);
-   readProgress(name);
+  // saveProgress(name);
+  // readProgress(name);
     
+    char matrix[50][50]{};
+    createPlayerBoard(matrix, 21);
+   // printMatrix(matrix, LEVEL2_SIZE);
+    //std::cout << myStrlen("gerieqka");
+
+   // std::cout << convertToString("gerigeri");
+    saveMap(name, LEVEL2_SIZE, matrix);
     return 0;
 }
