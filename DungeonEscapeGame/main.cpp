@@ -50,13 +50,10 @@ void printMatrix(char matrix[][MAX_SIZE], int size)
 
 {
     system("cls");
-    int coins = 0;
-    int lives = 3;
-    bool key = false;
     std::cout << "Lives: " << lives << std::endl;
     std::cout << "Coins: " << coins << std::endl;
     std::cout << "Key: ";
-    if (key)
+    if (!key)
     {
         std::cout << "not found" << std::endl;
     }
@@ -134,6 +131,16 @@ void myStrcat(char* first, const char* second)
     size_t firstLen = myStrlen(first);
     first += firstLen;
     myStrcpy(second, first);
+}
+void convertFromStringToCharArray(std::string string, char* str)
+{
+    int len = string.length();
+
+    for (int i = 0; i < len; i++)
+    {
+        str[i] = string[i];
+    }
+
 }
 
 bool playerFound(char* playersName, char* name)
@@ -511,7 +518,14 @@ void begining(char* playersName)
 
 
 }
-
+void readPlayersSavedMatrix(char* playersName, char matrix[][MAX_SIZE], int size)
+{
+    std::string fileName = convertToString(playersName) + ".txt";
+    char fileNameArr[MAX_SIZE]{};
+    convertFromStringToCharArray(fileName, fileNameArr);
+    readPlayerBoard(fileNameArr, matrix, size);
+    printMatrix(matrix, size);
+}
 void saveMap(char* playersName, int size, char matrix[50][50])
 {
     std::string fileName = convertToString(playersName) + ".txt";
@@ -552,44 +566,44 @@ void winGame()
 }
 
 void gameOver()
-{
-    system("cls");
-
-    std::cout << "You don't have any lives left!" << std::endl;
-    std::cout << "Do you want to try again? Please answer yes[y/Y] or no[n/N]." << std::endl;
-
-    char answer;
-    wrong:
-    std::cin >> answer;
-
-    switch (answer)
     {
-    case 'y':
-    case 'Y':
-        lives = 3;
-        coins = 0;
-        key = false;
-
-        //insertMatrix();
-        //start();
-        break;
-    case 'n':
-    case 'N':
         system("cls");
-        std::cout << "Game over! Thank you for playing!" << std::endl;
 
-        Sleep(1000);
+        std::cout << "You don't have any lives left!" << std::endl;
+        std::cout << "Do you want to try again? Please answer yes[y/Y] or no[n/N]." << std::endl;
 
-        exit(0);
-        break;
-    default:
-        std::cout << "Wrong input! Please try again." << std::endl;
-        goto wrong;
+        char answer;
+        wrong:
+        std::cin >> answer;
+
+        switch (answer)
+        {
+        case 'y':
+        case 'Y':
+            lives = 3;
+            coins = 0;
+            key = false;
+
+            //insertMatrix();
+            //start();
+            break;
+        case 'n':
+        case 'N':
+            system("cls");
+            std::cout << "Game over! Thank you for playing!" << std::endl;
+
+            Sleep(1000);
+
+            exit(0);
+            break;
+        default:
+            std::cout << "Wrong input! Please try again." << std::endl;
+            goto wrong;
+        }
+
+
+
     }
-    
-
-    
-}
 
 int main()
 {
@@ -602,17 +616,23 @@ int main()
 
    // system("cls");
     char name[MAX_SIZE]{};
-    std::cin >> name;
+   std::cin >> name;
 
   // saveProgress(name);
   // readProgress(name);
     
     char matrix[50][50]{};
-    createPlayerBoard(matrix, 21);
+  //  createPlayerBoard(matrix, 21);
    // printMatrix(matrix, LEVEL2_SIZE);
     //std::cout << myStrlen("gerieqka");
 
    // std::cout << convertToString("gerigeri");
-    saveMap(name, LEVEL2_SIZE, matrix);
+  //  saveMap(name, LEVEL2_SIZE, matrix);
+  //  std::string s = "Geri e qka";
+  //  convertFromStringToCharArray(s, name);
+
+  //  for (int i = 0; i < 50; i++)
+    //    std::cout << name[i] << " ";
+    readPlayersSavedMatrix(name, matrix, LEVEL2_SIZE);
     return 0;
 }
