@@ -247,7 +247,7 @@ void addNewPlayer(char* playersName)
         outFileProgress.open("Progress.txt", std::ios_base::app);
 
         outFileNames << playersName << "\n";
-        outFileProgress << playersName << " " << 1 << " " << 3 << " " << 74 << " " << false << "\n";
+        outFileProgress << playersName << " " << 1 << " " << lives << " " << coins << " " << false << "\n";
         
 
         std::cout << "Player " << playersName << " was added.\n";
@@ -265,7 +265,7 @@ void addNewPlayer(char* playersName)
         player.close();
     }
 
-    Sleep(100);
+    Sleep(1000);
 }
 void getSize()
 {
@@ -630,10 +630,7 @@ void saveProgress(char* playersName)
 
     }
 }
-void replaceProgress(char* playersName)
-{
 
-}
 void readProgress(char* playersName)
 {
     std::ifstream inputFile("Progress.txt");
