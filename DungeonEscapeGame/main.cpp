@@ -19,7 +19,7 @@ int coins;
 int level = 3;
 int levelVersion;
 bool key;
-
+bool wasPortal = false;
 char matrix[][MAX_SIZE];
 int size;
 char* playersName;
@@ -35,6 +35,7 @@ void startingMessages()
     std::cout << "Welcome to Dungeon Escape!" << std::endl;
     std::cout << "To win the game you will have to escape a maze." << std::endl;
     std::cout << "There are 3 levels. Get through the leves succesfully and with maximum number of coins." << std::endl;
+    std::cout << "Good luck!" << std::endl;
     std::cout << std::endl;
 }
 void explanationsMessages()
@@ -447,6 +448,43 @@ void findPlayer()//char matrix[][MAX_SIZE], int size, int& startingRow, int& sta
         }
     }
 }
+void findPortal()
+{
+    bool found = false;
+
+    for (int i = startingRow; i < size; i++)
+    {
+        for (int j = startingCol; j < size; j++)
+        {
+            if (matrix[i][j] == '%')
+            {
+                found = true;
+              
+                matrix[i][j] = matrix[startingRow][startingCol];
+                matrix[startingRow][startingCol ] = '%';
+                wasPortal = true;
+                break;
+            }
+        }
+    }
+    if (!found) 
+    {
+        for (int i = 0; i < size; i++) 
+        {
+            for (int j = 0; j < size; j++) 
+            {
+                if (matrix[i][j] == '%') 
+                {
+                    matrix[i][j] = matrix[startingRow][startingCol];
+                    matrix[startingRow][startingCol] = '%';
+                    wasPortal = true;
+                    break;
+                }
+            }
+        }
+    }
+
+}
 //TODO
 void start()
 {
@@ -723,6 +761,42 @@ void winGame()
 
         Sleep(2000);
         exit(0);
+    }
+    else
+    {
+        level++;
+        levelVersion = level * 10 + std::rand() % 2;
+        key = false;
+        saveProgress();
+
+        
+        std::cout << "You have passed the level! Do you want to continue with the next one?" << std::endl;
+       again:
+        std::cout << "Please answer yes[y/Y] or no[n/N]." << std::endl;
+
+        
+        char answer;
+        std::cin >> answer;
+
+        switch (answer)
+        {
+        case 'y':
+        case 'Y':
+            break;
+        case 'n':
+        case 'N':
+            system("cls");
+
+            std::cout << "Thank you for playing!" << std::endl;
+
+            Sleep(100);
+            exit(0);
+            break;
+        default:
+            std::cout << "Wrong input!" << std::endl;
+            goto again;
+            break;
+        }
     }
 }
 
