@@ -12,11 +12,11 @@ void myStrcpy(const char* source, char* dest);
 
 void myStrcat(char* first, const char* second);
 
-bool playerFound(char* name);
+bool playerFound(char* name, char* playersName);
 
-int returnPlayerLevel();
+int returnPlayerLevel(char* playersName);
 
-void addNewPlayer();
+void addNewPlayer(char* playersName);
 
 void getSize();
 
@@ -34,11 +34,11 @@ bool isChest();
 
 bool isBlankSpace();
 
-void movePlayer();
+void movePlayer(char* playersName);
 
 void makeMove(int row, int col);
 
-void checkBoard();
+void checkBoard(char* playersName);
 
 bool isValidLevel();
 
@@ -46,24 +46,24 @@ void findPlayer();
 
 void findPortal();
 
-void start();
+void start(char* playersName);
 
-bool hasProgress();
+bool hasProgress(char* playersName);
 
-void saveProgress();
+void saveProgress(char* playersName);
 
-void readProgress();
+void readProgress(char* playersName);
 
-void begining();
+void begining(char* playersName);
 
-void readPlayersSavedMatrix();
+void readPlayersSavedMatrix(char* playersName);
 
-void saveMap();
+void saveMap(char* playersName);
 
-void chooseStartingMap();
+void chooseStartingMap(char* playersName);
 
-void winGame();
+void winGame(char* playersName);
 
-void gameOver();
+void gameOver(char* playersName);
 
 

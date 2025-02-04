@@ -1,6 +1,2 @@
-Geri 5 3 77 1
-Mimi 5 3 77 0
-Gergana1000
-  ? 
-0 0 0 false
-Gergana 2 365 0 false
+
+Gergana 3 2 3 false
