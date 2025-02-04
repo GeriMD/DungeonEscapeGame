@@ -46,7 +46,7 @@ void explanationsMessages()
     std::cout << "& - key [You need it to finish the level!]" << std::endl;
     std::cout << "X - chest [You open it with the key to win the level.]" << std::endl;
 }
-
+void checkBoard();
 void readPlayerBoard(const char* filePath) //, char matrix[][MAX_SIZE], int size)
 {
     if (!filePath)
@@ -262,6 +262,21 @@ void addNewPlayer()
 
     Sleep(100);
 }
+void getSize()
+{
+    switch (level)
+    {
+    case 1:
+        size = LEVEL1_SIZE;
+        break;
+    case 2:
+        size = LEVEL2_SIZE;
+        break;
+    case 3:
+        size = LEVEL3_SIZE;
+        break;
+    }
+}
 
 void createPlayerBoard( int toOpen) //, char matrix[][MAX_SIZE])
 {
@@ -283,10 +298,6 @@ void createPlayerBoard( int toOpen) //, char matrix[][MAX_SIZE])
     }
 
 }
-bool isInTheBoudaries()//int size, int row, int col)
-{
-    return (newRow >= 0 && newRow < size) && (newCol >= 0 && newCol < size);
-}
 bool isWall()//char matrix[][MAX_SIZE], int row, int col)
 {
     return matrix[newRow][newCol] == '#';
@@ -307,6 +318,10 @@ bool isChest()//char matrix[][MAX_SIZE], int row, int col)
 {
     return matrix[newRow][newCol] == 'X';
 }
+bool isBlankSpace()
+{
+    return matrix[newRow][newCol] == '0';
+}
 
 //TODO: MAYBE MAKE THEM GLOBAL?
 void movePlayer()//char* playersName, int& startingRow, int& startingCol, int size, char matrix[][MAX_SIZE])
@@ -324,61 +339,36 @@ void movePlayer()//char* playersName, int& startingRow, int& startingCol, int si
     {
         //up
     case 'w':
-    case 'W':
-        if (isInTheBoudaries())//size, startingRow - 1, startingCol)) 
-        {
-            newRow--;
-
-        }
-        else
-        {
-            std::cout << "You cannot make that move. You are trying to go out of the playing board.";
-        }
-
-        break;
+    case 'W':  newRow--; break;
         //down
     case 's':
-    case 'S':
-        if (isInTheBoudaries())//size, startingRow + 1, startingCol)) 
-        {
-            newRow++;
-        }
-        else
-        {
-            std::cout << "You cannot make that move. You are trying to go out of the playing board.";
-        }
-        break;
+    case 'S': newRow++; break;
         //left
     case 'a':
-    case 'A':
-        if (isInTheBoudaries())//size, startingRow, startingCol - 1)) 
-        {
-            newCol--;
-        }
-        else
-        {
-            std::cout << "You cannot make that move. You are trying to go out of the playing board.";
-        }
-        break;
+    case 'A': newCol--; break;
         //right
     case 'd':
-    case 'D':
-        if (isInTheBoudaries())//size, startingRow, startingCol + 1)) 
-        {
-            newCol++;
-        }
-        else
-        {
-            std::cout << "You cannot make that move. You are trying to go out of the playing board.";
-        }
-        break;
+    case 'D': newCol++; break;
     case 'e':
     case 'E':
         Sleep(1000);
         saveProgress();//playersName);
             saveMap();// playersName, size, matrix);
+            std::cout << "Thank you for playing!" << std::endl;
+            Sleep(1000);
+            exit(0);
         break;
     }
+    checkBoard();
+}
+void makeMove(int row, int col)
+{
+    char ch;
+    ch = matrix[row][col];
+    matrix[row][col] = matrix[startingRow][startingCol];
+    matrix[startingRow][startingCol] = ch;
+    startingRow = row;
+    startingCol = col;
 }
 
 void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
@@ -392,21 +382,35 @@ void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
         }
     }
     else if (isCoin())//matrix, row, col))
-    {
+    { 
         coins++;
+        matrix[newRow][newCol] = '0';
+        
+        makeMove(newRow, newCol);
     }
     else if (isKey())//matrix, row, col))
     {
+        
         key = true;
+        matrix[newRow][newCol] = '0';
+
+        makeMove(newRow, newCol);
     }
     else if (isPortal())//matrix, row, col))
     {
+        matrix[newRow][newCol] = '0';
 
+        makeMove(newRow, newCol);
+        //TODO: findPortal();
     }
     else if (isChest())//matrix, row, col))
     {
         if (key)
         {
+            matrix[newRow][newCol] = '0';
+
+            makeMove(newRow, newCol);
+            Sleep(1000);
             winGame();
         }
         else
@@ -416,6 +420,12 @@ void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
             printMatrix();// matrix, size);
            movePlayer();
         }
+    }
+    else if (isBlankSpace())
+    {
+        matrix[newRow][newCol] = '0';
+
+        makeMove(newRow, newCol);
     }
 }
 bool isValidLevel()//int level)
