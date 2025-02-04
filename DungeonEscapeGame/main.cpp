@@ -20,6 +20,15 @@ int level = 3;
 int levelVersion;
 bool key;
 
+char matrix[][MAX_SIZE];
+int size;
+char* playersName;
+
+int startingRow; 
+int startingCol;
+int newRow;
+int newCol;
+
 
 void startingMessages()
 {
@@ -38,7 +47,7 @@ void explanationsMessages()
     std::cout << "X - chest [You open it with the key to win the level.]" << std::endl;
 }
 
-void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int size)
+void readPlayerBoard(const char* filePath) //, char matrix[][MAX_SIZE], int size)
 {
     if (!filePath)
     {
@@ -63,7 +72,7 @@ void readPlayerBoard(const char* filePath, char matrix[][MAX_SIZE], int size)
     ifs.close();
 }
 
-void printMatrix(char matrix[][MAX_SIZE], int size)
+void printMatrix()//char matrix[][MAX_SIZE], int size)
 
 {
     system("cls");
@@ -160,7 +169,7 @@ void convertFromStringToCharArray(std::string string, char* str)
 
 }
 
-bool playerFound(char* playersName, char* name)
+bool playerFound(char* name)//, char* playersName)
 {
     while (*name != '\0' && *playersName != '\0')
     {
@@ -174,7 +183,7 @@ bool playerFound(char* playersName, char* name)
     return (*playersName == '\0' && *name == '\0');
 }
 
-int returnPlayerLevel(char* playersName)
+int returnPlayerLevel()//char* playersName)
 {
     char name[MAX_SIZE];
 
@@ -187,7 +196,7 @@ int returnPlayerLevel(char* playersName)
     {
         while (inputFile >> name)
         {
-            if (playerFound(playersName, name))
+            if (playerFound(name)) //playersName))
             {
                 inputFile >> level;
                 inputFile.close();
@@ -205,7 +214,7 @@ int returnPlayerLevel(char* playersName)
 
 void addNewPlayer()
 {
-    char playersName[MAX_SIZE];
+  //  char playersName[MAX_SIZE];
 
     std::cout << "Please enter your name: " << std::endl;
     std::cin >> playersName;
@@ -219,7 +228,7 @@ void addNewPlayer()
     }
     int level = 0;
 
-    if (level = returnPlayerLevel(playersName))
+    if (level = returnPlayerLevel())//playersName))
     {
 
         std::cout << "Player " << playersName << " was found! Current level: " << level << std::endl;
@@ -248,63 +257,77 @@ void addNewPlayer()
         myStrcat(fileName, txt);
 
         std::ofstream player(fileName);
-        //int startingLevel = 1;
-        //int startingLives = 3;
-        //bool keyFound = false;
-        //player << "level: " << startingLevel << std::endl;
-        //player << "lives: " << startingLives << std::endl;
-        //player << "Key: " << keyFound << std::endl;
         player.close();
     }
 
     Sleep(100);
 }
 
-void createPlayerBoard(char matrix[][MAX_SIZE], int toOpen)
+void createPlayerBoard( int toOpen) //, char matrix[][MAX_SIZE])
 {
 
     switch (toOpen)
     {
-    case 10: readPlayerBoard("Level1.1.txt", matrix, LEVEL1_SIZE); break;
-    case 11: readPlayerBoard("Level1.2.txt", matrix, LEVEL1_SIZE); break;
-    case 20: readPlayerBoard("Level2.1.txt", matrix, LEVEL2_SIZE); break;
-    case 21: readPlayerBoard("Level2.2.txt", matrix, LEVEL2_SIZE); break;
-    case 30: readPlayerBoard("Level3.1.txt", matrix, LEVEL3_SIZE); break;
-    case 31: readPlayerBoard("Level3.2.txt", matrix, LEVEL3_SIZE); break;
+    case 10: readPlayerBoard("Level1.1.txt");//, matrix, LEVEL1_SIZE); 
+        break;
+    case 11: readPlayerBoard("Level1.2.txt");// , matrix, LEVEL1_SIZE);
+        break;
+    case 20: readPlayerBoard("Level2.1.txt");// , matrix, LEVEL2_SIZE);
+        break;
+    case 21: readPlayerBoard("Level2.2.txt");// , matrix, LEVEL2_SIZE);
+        break;
+    case 30: readPlayerBoard("Level3.1.txt");// , matrix, LEVEL3_SIZE);
+        break;
+    case 31: readPlayerBoard("Level3.2.txt");//, matrix, LEVEL3_SIZE); 
+        break;
     }
 
 }
-bool isInTheBoudaries(int size, int row, int col)
+bool isInTheBoudaries()//int size, int row, int col)
 {
-    return (row >= 0 && row < size) && (col >= 0 && col < size);
+    return (newRow >= 0 && newRow < size) && (newCol >= 0 && newCol < size);
 }
-bool isNotAWall(char matrix[][MAX_SIZE], int row, int col)
+bool isWall()//char matrix[][MAX_SIZE], int row, int col)
 {
-    return matrix[row][col] != '#';
+    return matrix[newRow][newCol] == '#';
 }
-bool isKey(char matrix[][MAX_SIZE], int row, int col)
+bool isKey()//char matrix[][MAX_SIZE], int row, int col)
 {
-    return matrix[row][col] == '&';
+    return matrix[newRow][newCol] == '&';
 }
-bool isCoin(char matrix[][MAX_SIZE], int row, int col)
+bool isCoin()//char matrix[][MAX_SIZE], int row, int col)
 {
-    return matrix[row][col] == 'C';
+    return matrix[newRow][newCol] == 'C';
 }
-bool isPortal(char matrix[][MAX_SIZE], int row, int col)
+bool isPortal()//char matrix[][MAX_SIZE], int row, int col)
 {
-    return matrix[row][col] == '%';
+    return matrix[newRow][newCol] == '%';
+}
+bool isChest()//char matrix[][MAX_SIZE], int row, int col)
+{
+    return matrix[newRow][newCol] == 'X';
 }
 
-
-void movePlayer(char direction, int& startingRow, int& startingCol, int size)
+//TODO: MAYBE MAKE THEM GLOBAL?
+void movePlayer()//char* playersName, int& startingRow, int& startingCol, int size, char matrix[][MAX_SIZE])
 {
+    std::cout << "Please choose direction to go." << std::endl;
+    std::cout << "Up[w/W], down[s/S], left[a/A], right[d/D] or exit[e/E] the game." << std::endl;
+   
+    newRow = startingRow;
+    newCol = startingCol;
+
+    char direction;
+    std::cin >> direction;
+
     switch (direction)
     {
         //up
     case 'w':
     case 'W':
-        if (isInTheBoudaries(size, startingRow - 1, startingCol)) {
-            startingRow--;
+        if (isInTheBoudaries())//size, startingRow - 1, startingCol)) 
+        {
+            newRow--;
 
         }
         else
@@ -316,8 +339,9 @@ void movePlayer(char direction, int& startingRow, int& startingCol, int size)
         //down
     case 's':
     case 'S':
-        if (isInTheBoudaries(size, startingRow + 1, startingCol)) {
-            startingRow++;
+        if (isInTheBoudaries())//size, startingRow + 1, startingCol)) 
+        {
+            newRow++;
         }
         else
         {
@@ -327,8 +351,9 @@ void movePlayer(char direction, int& startingRow, int& startingCol, int size)
         //left
     case 'a':
     case 'A':
-        if (isInTheBoudaries(size, startingRow, startingCol - 1)) {
-            startingCol--;
+        if (isInTheBoudaries())//size, startingRow, startingCol - 1)) 
+        {
+            newCol--;
         }
         else
         {
@@ -338,23 +363,67 @@ void movePlayer(char direction, int& startingRow, int& startingCol, int size)
         //right
     case 'd':
     case 'D':
-        if (isInTheBoudaries(size, startingRow, startingCol + 1)) {
-            startingCol++;
+        if (isInTheBoudaries())//size, startingRow, startingCol + 1)) 
+        {
+            newCol++;
         }
         else
         {
             std::cout << "You cannot make that move. You are trying to go out of the playing board.";
         }
         break;
+    case 'e':
+    case 'E':
+        Sleep(1000);
+        saveProgress();//playersName);
+            saveMap();// playersName, size, matrix);
+        break;
     }
 }
 
-bool isValidLevel(int level)
+void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
+{
+    if (isWall())//matrix, row, col))
+    {
+        lives--;
+        if (lives == 0)
+        {
+            gameOver();
+        }
+    }
+    else if (isCoin())//matrix, row, col))
+    {
+        coins++;
+    }
+    else if (isKey())//matrix, row, col))
+    {
+        key = true;
+    }
+    else if (isPortal())//matrix, row, col))
+    {
+
+    }
+    else if (isChest())//matrix, row, col))
+    {
+        if (key)
+        {
+            winGame();
+        }
+        else
+        {
+            std::cout << "You don't have the key to unlock the chest." << std::endl;
+            Sleep(1000);
+            printMatrix();// matrix, size);
+           movePlayer();
+        }
+    }
+}
+bool isValidLevel()//int level)
 {
     return (level > 0 && level <= LEVELS_COUNT);
 }
 
-void findPlayer(char matrix[][MAX_SIZE], int size, int& startingRow, int& startingCol)
+void findPlayer()//char matrix[][MAX_SIZE], int size, int& startingRow, int& startingCol)
 {
     for (int i = 0; i < size; i++)
     {
@@ -368,7 +437,7 @@ void findPlayer(char matrix[][MAX_SIZE], int size, int& startingRow, int& starti
         }
     }
 }
-
+//TODO
 void start()
 {
     int coins;
@@ -376,23 +445,21 @@ void start()
     bool key;
     char matrix[MAX_SIZE][MAX_SIZE]{};
     char direction;
-    createPlayerBoard(matrix, 11);
-    printMatrix(matrix, 15);
+    createPlayerBoard( 11); // matrix);
+    printMatrix();// matrix, 15);
 move:
-    std::cout << "Please choose a direction: " << std::endl;
-
-    std::cin >> direction;
+    
     int startingRow = 1;
     int startingCol = 1;
-    findPlayer(matrix, 15, startingRow, startingCol);
+    findPlayer();//matrix, 15, startingRow, startingCol);
     matrix[startingRow][startingCol] = ' ';
-    movePlayer(direction, startingRow, startingCol, 15);
-    matrix[startingRow][startingCol] = '@';
-    printMatrix(matrix, 15);
+  //  movePlayer( startingRow, startingCol, 15);
+    matrix[newRow][newCol] = '@';
+    printMatrix();// matrix, 15);
     goto move;
 
 }
-bool hasProgress(char* playersName)
+bool hasProgress()//char* playersName)
 {
     char name[MAX_SIZE];
 
@@ -403,7 +470,7 @@ bool hasProgress(char* playersName)
     {
         while (inputFile >> name)
         {
-            if (playerFound(playersName, name))
+            if (playerFound(name)) //playersName)
             {
 
                 inputFile.close();
@@ -419,7 +486,7 @@ bool hasProgress(char* playersName)
     return false;
 }
 //TODO: MAY CAUSE A PROBLEM!!!
-void saveProgress(char* playersName)
+void saveProgress()//char* playersName)
 {
     std::string strLives, strCoins, strLevel, strKey, strName;
     strLives = std::to_string(lives);
@@ -433,7 +500,7 @@ void saveProgress(char* playersName)
     {
         strKey = "false";
     }
-    if (hasProgress(playersName))
+    if (hasProgress())//playersName))
     {
         std::ifstream file("Progress.txt");
 
@@ -495,7 +562,7 @@ void replaceProgress(char* playersName)
 {
 
 }
-void readProgress(char* playersName)
+void readProgress()//char* playersName)
 {
     std::ifstream inputFile("Progress.txt");
 
@@ -506,13 +573,13 @@ void readProgress(char* playersName)
     }
 
     bool found = false;
-    found = hasProgress(playersName);
+    found = hasProgress();//playersName);
     char name[MAX_SIZE];
     if (found)
     {
         while (inputFile >> name)
         {
-            if (playerFound(playersName, name))
+            if (playerFound(name))//playersName))
             {
                 inputFile >> level >> lives >> coins >> key;
                 inputFile.close();
@@ -529,20 +596,20 @@ void readProgress(char* playersName)
     }
   // std::cout << playersName << " " << level << " " << lives << " " << coins << " " << key << std::endl;
 }
-void begining(char* playersName)
+void begining()//char* playersName)
 {
-    readProgress(playersName);
+    readProgress();//playersName);
 
 
 }
-void readPlayersSavedMatrix(char* playersName, char matrix[][MAX_SIZE], int size)
+void readPlayersSavedMatrix()//char* playersName, char matrix[][MAX_SIZE], int size)
 {
     std::string fileName = convertToString(playersName) + ".txt";
     char fileNameArr[MAX_SIZE]{};
     convertFromStringToCharArray(fileName, fileNameArr);
-    readPlayerBoard(fileNameArr, matrix, size);
+    readPlayerBoard(fileNameArr);// fileNameArr, matrix, size);
 }
-void saveMap(char* playersName, int size, char matrix[50][50])
+void saveMap()//char* playersName, int size, char matrix[50][50])
 {
     std::string fileName = convertToString(playersName) + ".txt";
 
@@ -567,7 +634,7 @@ void saveMap(char* playersName, int size, char matrix[50][50])
 
 }
 
-void chooseStartingMap(char* playersName, char matrix[][MAX_SIZE], int& size)
+void chooseStartingMap()//char* playersName, char matrix[][MAX_SIZE], int& size)
 {
     again:
     std::cout << "Do you want to continue[c/C] your last saved level, or start a new one[n/N]? " << std::endl;
@@ -582,7 +649,7 @@ void chooseStartingMap(char* playersName, char matrix[][MAX_SIZE], int& size)
     case 'C':
     {
         
-       level = returnPlayerLevel(playersName);
+        level = returnPlayerLevel();//playersName);
        switch (level)
        {
        case 1:
@@ -595,11 +662,11 @@ void chooseStartingMap(char* playersName, char matrix[][MAX_SIZE], int& size)
            size = LEVEL3_SIZE;
            break;
        }
-        readPlayersSavedMatrix(playersName, matrix, size);
+       readPlayersSavedMatrix();//playersName, matrix, size);
         lives = 3;
         coins = 0;
         key = false;
-        printMatrix(matrix, size);
+        printMatrix();// matrix, size);
     }
        
         break;
@@ -619,8 +686,8 @@ void chooseStartingMap(char* playersName, char matrix[][MAX_SIZE], int& size)
             levelVersion = startingLevel * 10 + std::rand() % 2;
             key = false;
             level = startingLevel;
-            createPlayerBoard(matrix, levelVersion);
-            printMatrix(matrix, LEVEL3_SIZE);
+            createPlayerBoard(levelVersion); //matrix);
+            printMatrix();//matrix, LEVEL3_SIZE);
         } 
         else
         {
@@ -719,7 +786,7 @@ int main()
     //    std::cout << name[i] << " ";
    // readPlayersSavedMatrix(name, matrix, LEVEL2_SIZE);
     int size;
-    chooseStartingMap(name, matrix, size);
+    chooseStartingMap();// name, matrix, size);
    
     return 0;
 }
