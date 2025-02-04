@@ -7,6 +7,7 @@
 #include <ctime>
 #include <vector>
 #include <string>
+#include "game.h"
 
 const int MAX_SIZE = 50;
 const int LEVEL1_SIZE = 15;
@@ -20,7 +21,7 @@ int level = 3;
 int levelVersion;
 bool key;
 bool wasPortal = false;
-char matrix[][MAX_SIZE];
+char matrix[MAX_SIZE][MAX_SIZE];
 int size;
 char* playersName;
 
@@ -47,7 +48,7 @@ void explanationsMessages()
     std::cout << "& - key [You need it to finish the level!]" << std::endl;
     std::cout << "X - chest [You open it with the key to win the level.]" << std::endl;
 }
-void checkBoard();
+
 void readPlayerBoard(const char* filePath) //, char matrix[][MAX_SIZE], int size)
 {
     if (!filePath)
@@ -376,6 +377,7 @@ void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
 {
     if (isWall())//matrix, row, col))
     {
+       
         lives--;
         if (lives == 0)
         {
@@ -383,26 +385,48 @@ void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
         }
     }
     else if (isCoin())//matrix, row, col))
-    { 
+    {
+        if (wasPortal) {
+            matrix[newRow][newCol] = '%';
+            wasPortal = false;
+        }
+        else
+        {
+matrix[newRow][newCol] = '0';
+        }
         coins++;
-        matrix[newRow][newCol] = '0';
+        
         
         makeMove(newRow, newCol);
     }
     else if (isKey())//matrix, row, col))
     {
+        if (wasPortal) {
+            matrix[newRow][newCol] = '%';
+            wasPortal = false;
+        }
+        else
+        {
+            matrix[newRow][newCol] = '0';
+        }
         
         key = true;
-        matrix[newRow][newCol] = '0';
-
+   
         makeMove(newRow, newCol);
     }
     else if (isPortal())//matrix, row, col))
     {
-        matrix[newRow][newCol] = '0';
+        if (wasPortal) {
+            matrix[newRow][newCol] = '%';
+            wasPortal = false;
+        }
+        else
+        {
+            matrix[newRow][newCol] = '0';
+        }
 
         makeMove(newRow, newCol);
-        //TODO: findPortal();
+        findPortal();
     }
     else if (isChest())//matrix, row, col))
     {
@@ -424,7 +448,14 @@ void checkBoard()//char matrix[][MAX_SIZE], int row, int col, int size)
     }
     else if (isBlankSpace())
     {
-        matrix[newRow][newCol] = '0';
+        if (wasPortal) {
+            matrix[newRow][newCol] = '%';
+            wasPortal = false;
+        }
+        else
+        {
+            matrix[newRow][newCol] = '0';
+        }
 
         makeMove(newRow, newCol);
     }
@@ -488,22 +519,12 @@ void findPortal()
 //TODO
 void start()
 {
-    int coins;
-    int lives;
-    bool key;
-    char matrix[MAX_SIZE][MAX_SIZE]{};
-    char direction;
-    createPlayerBoard( 11); // matrix);
-    printMatrix();// matrix, 15);
+    printMatrix();
 move:
     
-    int startingRow = 1;
-    int startingCol = 1;
-    findPlayer();//matrix, 15, startingRow, startingCol);
-    matrix[startingRow][startingCol] = ' ';
-  //  movePlayer( startingRow, startingCol, 15);
-    matrix[newRow][newCol] = '@';
-    printMatrix();// matrix, 15);
+    findPlayer();
+    movePlayer();
+    printMatrix();
     goto move;
 
 }
@@ -850,13 +871,13 @@ int main()
   //  addNewPlayer();
 
    // system("cls");
-    char name[MAX_SIZE]{};
-   std::cin >> name;
+   // char name[MAX_SIZE]{};
+  // std::cin >> name;
 
   // saveProgress(name);
   // readProgress(name);
     
-    char matrix[50][50]{};
+   // char matrix[50][50]{};
   //  createPlayerBoard(matrix, 21);
    // printMatrix(matrix, LEVEL2_SIZE);
     //std::cout << myStrlen("gerieqka");
@@ -869,8 +890,8 @@ int main()
   //  for (int i = 0; i < 50; i++)
     //    std::cout << name[i] << " ";
    // readPlayersSavedMatrix(name, matrix, LEVEL2_SIZE);
-    int size;
-    chooseStartingMap();// name, matrix, size);
-   
+   // int size;
+   // chooseStartingMap();// name, matrix, size);
+    start();
     return 0;
 }
