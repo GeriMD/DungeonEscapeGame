@@ -688,7 +688,7 @@ void begining(char* playersName)
     std::cout << std::endl;
     explanationsMessages();
 
-    Sleep(2000);
+    Sleep(4000);
     system("cls");
     start(playersName);
         
