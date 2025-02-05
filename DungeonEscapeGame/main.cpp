@@ -23,7 +23,6 @@ bool key;
 bool wasPortal = false;
 char matrix[MAX_SIZE][MAX_SIZE];
 int size;
-//char* playersName = nullptr;
 
 int startingRow; 
 int startingCol;
@@ -73,7 +72,26 @@ void readPlayerBoard(const char* filePath) //, char matrix[][MAX_SIZE], int size
 
     ifs.close();
 }
+void createPlayerBoard( int toOpen) //, char matrix[][MAX_SIZE])
+{
 
+    switch (toOpen)
+    {
+    case 10: readPlayerBoard("Level1.1.txt");//, matrix, LEVEL1_SIZE); 
+        break;
+    case 11: readPlayerBoard("Level1.2.txt");// , matrix, LEVEL1_SIZE);
+        break;
+    case 20: readPlayerBoard("Level2.1.txt");// , matrix, LEVEL2_SIZE);
+        break;
+    case 21: readPlayerBoard("Level2.2.txt");// , matrix, LEVEL2_SIZE);
+        break;
+    case 30: readPlayerBoard("Level3.1.txt");// , matrix, LEVEL3_SIZE);
+        break;
+    case 31: readPlayerBoard("Level3.2.txt");//, matrix, LEVEL3_SIZE); 
+        break;
+    }
+
+}
 void printMatrix()//char matrix[][MAX_SIZE], int size)
 
 {
@@ -247,7 +265,7 @@ void addNewPlayer(char* playersName)
         outFileProgress.open("Progress.txt", std::ios_base::app);
 
         outFileNames << playersName << "\n";
-        outFileProgress << playersName << " " << 1 << " " << lives << " " << coins << " " << false << "\n";
+        outFileProgress << playersName << " " << 1 << " " << 3 << " " << coins << " " << false << "\n";
         
 
         std::cout << "Player " << playersName << " was added.\n";
@@ -283,26 +301,7 @@ void getSize()
     }
 }
 
-void createPlayerBoard( int toOpen) //, char matrix[][MAX_SIZE])
-{
 
-    switch (toOpen)
-    {
-    case 10: readPlayerBoard("Level1.1.txt");//, matrix, LEVEL1_SIZE); 
-        break;
-    case 11: readPlayerBoard("Level1.2.txt");// , matrix, LEVEL1_SIZE);
-        break;
-    case 20: readPlayerBoard("Level2.1.txt");// , matrix, LEVEL2_SIZE);
-        break;
-    case 21: readPlayerBoard("Level2.2.txt");// , matrix, LEVEL2_SIZE);
-        break;
-    case 30: readPlayerBoard("Level3.1.txt");// , matrix, LEVEL3_SIZE);
-        break;
-    case 31: readPlayerBoard("Level3.2.txt");//, matrix, LEVEL3_SIZE); 
-        break;
-    }
-
-}
 bool isWall()//char matrix[][MAX_SIZE], int row, int col)
 {
     return matrix[newRow][newCol] == '#';
@@ -673,6 +672,7 @@ void begining(char* playersName)
     if (level == 1)
     {
         levelVersion = level * 10 + std::rand() % 2;
+        getSize();
         createPlayerBoard(levelVersion);
 
     }
@@ -724,7 +724,35 @@ void saveMap(char* playersName)//, int size, char matrix[50][50])
     outFile.close();
 
 }
+//TODO: NEW METHOD MAY CAUSE A PROBLEM
+void saveNewMap(char* playersName)
+{
+    std::srand(std::time(nullptr));
+    levelVersion = level * 10 + std::rand() % 2;
+    getSize();
+    createPlayerBoard(levelVersion);
 
+    std::string fileName = convertToString(playersName) + ".txt";
+
+    std::ofstream outFile(fileName);
+
+    if (!outFile.is_open())
+    {
+        std::cout << "Cannot open this file!" << std::endl;
+    }
+    else
+    {
+        for (int i = 0; i < size; i++)
+        {
+            for (int j = 0; j < size; j++)
+            {
+                outFile << matrix[i][j];
+            }
+            outFile << std::endl;
+        }
+    }
+    outFile.close();
+}
 void chooseStartingMap(char* playersName)//, char matrix[][MAX_SIZE], int& size)
 {
     again:
@@ -741,18 +769,7 @@ void chooseStartingMap(char* playersName)//, char matrix[][MAX_SIZE], int& size)
     {
         
         level = returnPlayerLevel(playersName);
-       switch (level)
-       {
-       case 1:
-           size = LEVEL1_SIZE;
-           break;
-       case 2:
-           size = LEVEL2_SIZE;
-           break;
-       case 3:
-           size = LEVEL3_SIZE;
-           break;
-       }
+        getSize();
        readPlayersSavedMatrix(playersName); // , matrix, size);
         lives = 3;
         coins = 0;
@@ -777,6 +794,7 @@ void chooseStartingMap(char* playersName)//, char matrix[][MAX_SIZE], int& size)
             levelVersion = startingLevel * 10 + std::rand() % 2;
             key = false;
             level = startingLevel;
+            getSize();
             createPlayerBoard(levelVersion); //matrix);
             printMatrix();//matrix, LEVEL3_SIZE);
         } 
@@ -810,6 +828,8 @@ void winGame(char* playersName)
         level++;
         levelVersion = level * 10 + std::rand() % 2;
         key = false;
+        getSize();
+        saveNewMap(playersName);
         saveProgress(playersName);
 
         
@@ -825,8 +845,9 @@ void winGame(char* playersName)
         {
         case 'y':
         case 'Y':
-            level = 1;
+           
             levelVersion = level * 10 + std::rand() % 2;
+            getSize();
             createPlayerBoard(levelVersion);
             start(playersName);
             break;
@@ -902,7 +923,7 @@ int main()
     addNewPlayer(playersName);
     Sleep(1000);
     system("cls");
-    levelVersion = 10 + std::rand() % 2;
+    levelVersion = level * 10 + std::rand() % 2;
     createPlayerBoard(levelVersion);
     begining(playersName);
 
