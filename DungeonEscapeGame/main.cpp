@@ -9,6 +9,20 @@
 #include <string>
 #include "game.h"
 
+/**
+*
+* Solution to course project #3
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2024/2025
+*
+* @author Gergana Dimitrova
+* @idnumber 1MI0600543
+* @compiler VC
+*
+*
+*/
+
 const int MAX_SIZE = 50;
 const int LEVEL1_SIZE = 15;
 const int LEVEL2_SIZE = 20;
